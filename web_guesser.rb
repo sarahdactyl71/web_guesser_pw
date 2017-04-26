@@ -2,6 +2,7 @@ require 'sinatra'
 require 'sinatra/reloader'
 
 NUMBER = rand(100)
+background_color = 'white'
 
 def get_message(user_guess)
   if user_guess.nil?
@@ -9,20 +10,38 @@ def get_message(user_guess)
   end
   message = "Your guess was #{user_guess}."
   if user_guess.to_i > (NUMBER + 20)
-    message += "Your guess was way too high."
+    message += " A fire of 1000 suns hot."
   elsif user_guess.to_i > NUMBER
-    message += "Your guess was too high."
+    message += " Hot."
   elsif user_guess.to_i < (NUMBER - 20)
-    message += "Your guess was way too low."
+    message += " Freezing Cold."
   elsif user_guess.to_i < NUMBER
-    message += "Your guess was too low."
+    message += " Cold."
   elsif user_guess.to_i == NUMBER
-    message += "You got it!\nThe secret number was #{NUMBER}."
+    message += " Goldilocks loves you!\nThe random number was #{NUMBER}."
+  end
+end
+
+def get_background_color(user_guess)
+  if user_guess.nil?
+    return "white"
+  end
+  if user_guess.to_i > (NUMBER + 20)
+    return "red"
+  elsif user_guess.to_i > NUMBER
+    return "orange"
+  elsif user_guess.to_i < (NUMBER - 20)
+    return "blue"
+  elsif user_guess.to_i < NUMBER
+    return "lavendar"
+  elsif user_guess.to_i == NUMBER
+    return "yellow"
   end
 end
 
 get '/' do
   user_guess = params["guess"]
   reply = get_message(user_guess)
-  erb :index, :locals => {:reply => reply}
+  background_color = get_background_color(user_guess)
+  erb :index, :locals => {:reply => reply, :background_color => background_color}
 end
